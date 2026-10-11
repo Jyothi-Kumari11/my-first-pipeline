@@ -11,21 +11,39 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Build
-        run: echo "Build completed successfully!"
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Shell Syntax
+        run: bash -n hello.sh
+
+      - name: Execute Script
+        run: bash hello.sh
 
   test:
     name: Test
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Test
-        run: echo "Test completed successfully!"
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify Hello World Output
+        run: |
+          output=$(bash hello.sh)
+          if [ "$output" = "Hello, world!" ]; then
+            echo "Test passed"
+          else
+            echo "Test failed"
+            exit 1
+          fi
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Deploy
-        run: echo "Deploy completed successfully!"
+      - name: Deployment Check
+        run: |
+          echo "All tests passed."
+          echo "Deployment simulation completed."
